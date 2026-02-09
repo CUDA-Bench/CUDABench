@@ -10,7 +10,7 @@ from config import Config
 import utils
 import prompt_builder
 import llm_api
-from prompt import SYSTERM_PROMPT
+from prompt import SYSTEM_PROMPT
 
 def process_one_entry(entry, cfg: Config):
     pid = os.getpid()
@@ -32,30 +32,32 @@ def process_one_entry(entry, cfg: Config):
         # ---------- call LLM ----------
         if cfg.api_option == "openai":
             response = llm_api.call_chatgpt([
-                {"role": "system", "content": SYSTERM_PROMPT},
+                {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": prompt}
             ], cfg)
         elif cfg.api_option == "deepseek":
             response = llm_api.call_deepseek([
-                {"role": "system", "content": SYSTERM_PROMPT},
+                {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": prompt}
             ], cfg)
         elif cfg.api_option == "google":
             response = llm_api.call_gemini(
-                system_prompt=SYSTERM_PROMPT,
+                system_prompt=SYSTEM_PROMPT,
                 user_prompt=prompt,
                 cfg=cfg
             )
         elif cfg.api_option == "anthropic":
             response = llm_api.call_claude(
-                syste_prompt=SYSTERM_PROMPT, 
+                system_prompt=SYSTEM_PROMPT, 
                 messages= [{"role": "user", "content": prompt}],
                 cfg=cfg
             )
         elif cfg.api_option == "minimax":
-            response = llm_api.call_claude([
-                {"role": "user", "content": prompt}
-            ], cfg)
+            response = llm_api.call_claude(
+                system_prompt=SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": prompt}], 
+                cfg=cfg
+            )
         elif cfg.api_option == "qwen":
             response = llm_api.call_qwen([
                 {"role": "user", "content": prompt}

@@ -51,7 +51,7 @@ python main.py
 python main.py \
   --api_option deepseek \
   --model_name deepseek-reasoner \
-  --level level3_prompt \
+  --level 3 \
   --samples 3
 
 ```
