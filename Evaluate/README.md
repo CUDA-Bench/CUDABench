@@ -1,17 +1,9 @@
-# GPU Model Evaluation Tool 
+# Evaluation
 
 This repository provides a **simple, self-contained GPU model evaluation tool** for external users.
 
-The goal is straightforward:
 
-> Run one command, get Pass@1 / Pass@3 accuracy and efficiency statistics, printed directly in the terminal, with zero side effects.
-
-No intermediate files are kept.
-No manual directory management is required.
-
----
-
-## Directory Structure
+## 1. Directory Structure
 
 ```
 .
@@ -27,7 +19,7 @@ No manual directory management is required.
 
 ---
 
-## Requirements
+## 2. Requirements
 
 - Python 3.8+
 - CUDA Toolkit (nvcc)
@@ -36,7 +28,7 @@ No manual directory management is required.
 
 ---
 
-## Basic Usage
+## 3. Basic Usage
 
 ```bash
 python scripts/manager.py full your_results.jsonl
@@ -51,7 +43,7 @@ Nothing else.
 
 ---
 
-## Options
+## 4. Options
 
 ### Select GPU
 
@@ -68,7 +60,7 @@ python scripts/manager.py full your_results.jsonl --dataset datasets/your_datase
 
 ---
 
-## Output Format
+## 5. Output Format
 
 Only **arithmetic mean including zeros** is reported.
 
@@ -86,22 +78,3 @@ Compute_Efficiency         |    x.xxxx%
 Score                      |   xx.xxxx%
 ====================================================================================================
 ```
-
----
-
-## Zero Side-Effect Guarantee
-
-All intermediate files are created in a system temporary directory and automatically deleted after execution.
-
-Your project directory is never modified.
-
----
-
-## Summary
-
-- One command
-- One input file
-- Two final tables
-- No leftover files
-
-Designed for clean external use.

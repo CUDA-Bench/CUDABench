@@ -1,6 +1,6 @@
 # Generation
 
-A parallelized framework for evaluating Large Language Models (LLMs) on CUDA programming tasks. This tool supports multiple API providers (DeepSeek, OpenAI, Google, Anthropic) and uses multiprocessing to accelerate the generation process.
+A parallelized framework for evaluating LLMs on CUDA programming tasks. This tool supports multiple API providers (DeepSeek, OpenAI, Google, Anthropic) and uses multiprocessing to accelerate the generation process.
 
 ## 1. Directory Structure
 
