@@ -9,7 +9,6 @@ from anthropic import Anthropic
 
 from config import Config
 
-# 全局 Client 缓存
 _client = None
 
 def get_client(cfg: Config):

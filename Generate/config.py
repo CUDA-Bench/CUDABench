@@ -4,26 +4,22 @@ from dataclasses import dataclass, field
 
 @dataclass
 class Config:
-    # ==================== 核心配置 (可变参数) ====================
     api_option: str = "deepseek"  # "openai", "deepseek", "google", ...
     model_name: str = "deepseek-reasoner"
     level: str = "level1_prompt"
     num_samples: int = 3
     gpu_model: str = "NVIDIA GeForce RTX 4090"
 
-    # ==================== 路径配置 ====================
     dataset_path: str = "Datasets/CUDABench-Set.jsonl"
     tmp_root: str = "./temp"
     
     # 运行时自动生成唯一的 RUN_ID
     run_id: str = field(default_factory=lambda: uuid.uuid4().hex[:8])
 
-    # ==================== 运行时配置 ====================
     max_workers: int = 8
     base_backoff_s: int = 2
     max_backoff_s: int = 60
 
-    # ==================== 动态属性 (Properties) ====================
     
     @property
     def run_root(self) -> str:
@@ -39,11 +35,9 @@ class Config:
         os.makedirs(os.path.dirname(self.result_path), exist_ok=True)
 
     def display(self) -> str:
-        """生成格式化的配置信息字符串"""
-        # 定义对齐宽度
         pad = 22
         
-        # 构建输出内容
+
         lines = []
         lines.append("=" * 80)
         lines.append(f"Experiment Configuration (Run ID: {self.run_id})")
@@ -59,7 +53,7 @@ class Config:
         lines.append("-" * 80)
         lines.append("[Paths]")
         lines.append(f"  {'Dataset Path':<{pad}}: {self.dataset_path}")
-        # 注意：这里调用 property 显示最终生成的路径
+
         lines.append(f"  {'Result File':<{pad}}: {self.result_path}") 
         lines.append(f"  {'Temp Directory':<{pad}}: {self.run_root}")
         
