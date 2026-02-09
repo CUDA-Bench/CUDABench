@@ -1,6 +1,8 @@
 # CUDABench
 
-**CUDABench** is a comprehensive framework for evaluating Large Language Models (LLMs) on CUDA kernel generation tasks. It provides a complete pipeline from dataset management to LLM code generation and automated performance evaluation on NVIDIA GPUs.
+**CUDABench** is a comprehensive benchmark designed to evaluate the text-to-CUDA capabilities of LLMs. It provides a complete pipeline from dataset management to CUDA code generation and automated performance evaluation on NVIDIA GPUs.
+
+![overview](./figs/overview.png "Overview")
 
 ## 📁 Directory Structure
 
@@ -8,7 +10,7 @@
 CUDABench/
 ├── Datasets/           # Contains benchmark tasks (prompts, reference code)
 │   └── CUDABench-Set.jsonl
-├── Generate/           # LLM inference engine (Multi-API support)
+├── Generate/           # LLM inference engine
 │   ├── main.py
 │   ├── config.py
 │   └── ...
@@ -26,15 +28,8 @@ CUDABench/
 
 Before running the benchmark, ensure you have the following installed:
 
-* **Python 3.8+**
 * **CUDA Toolkit (`nvcc`)**: Required for compiling generated kernels.
 * **NVIDIA Nsight Compute (`ncu`)**: Required for profiling performance metrics.
-* **Python Dependencies**:
-```bash
-pip install openai google-genai anthropic tqdm
-```
-
-
 
 ---
 
@@ -47,20 +42,20 @@ The benchmark is driven by `Datasets/CUDABench-Set.jsonl`. Each line in this fil
 **Key Fields per Task:**
 
 * **Metadata**:
-* `id`, `task_name`: Unique identifiers for the problem.
-* `inputs` / `outputs`: Definitions of tensor shapes and data types (e.g., `float32`, shape `(1048576,)`).
+  * `id`, `task_name`: Unique identifiers for the problem.
+  * `inputs` / `outputs`: Definitions of tensor shapes and data types.
 
 
 * **Prompts (Difficulty Levels)**:
-* `level1_prompt`: **High Detail.** Explicitly describes memory layout, input/output shapes, and algorithmic steps.
-* `level2_prompt`: **Standard.** Describes the task conceptually (e.g., "Compute ReLU for array size N").
-* `level3_prompt`: **Minimal.** A one-sentence objective (e.g., "Compute ReLU on GPU").
+  * `level1_prompt`: **Guided Implementation**, providing the task name, a detailed algorithm description, and explicit CUDA implementation guidelines (e.g., memory hierarchy usage and thread-mapping strategies).
+  * `level2_prompt`: **Algorithmic Specification**, including the task name and algorithm description, but omits all hardware-specific guidance.
+  * `level3_prompt`: **Concept Retrieval**, supplying only the task name..
 
 
-* **Evaluation Artifacts**:
-* `bench.cu`: The reference CUDA C++ implementation (Ground Truth).
-* `gen.py`: Python script used to generate random binary input data for testing.
-* `compare.py`: Python script used to validate the correctness of the generated kernel against the reference.
+* **Evaluation Components**:
+  * `bench.cu`: The reference CUDA C++ implementation.
+  * `gen.py`: Python script used to generate random binary input data and reference output data for testing.
+  * `compare.py`: Python script used to validate the correctness of the generated kernel against the reference.
 
 
 
