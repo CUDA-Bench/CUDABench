@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 class Config:
     api_option: str = "deepseek"  # "openai", "deepseek", "google", ...
     model_name: str = "deepseek-reasoner"
-    level: str = "level1_prompt"
+    level: int = 3
     num_samples: int = 3
     gpu_model: str = "NVIDIA GeForce RTX 4090"
 

@@ -59,9 +59,10 @@ def process_one_entry(entry, cfg: Config):
                 cfg=cfg
             )
         elif cfg.api_option == "qwen":
-            response = llm_api.call_qwen([
-                {"role": "user", "content": prompt}
-            ], cfg)
+            response = llm_api.call_qwen(
+                messages= [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}], 
+                cfg= cfg
+            )
         else:
             # print("Unknown API Option")
             response = None

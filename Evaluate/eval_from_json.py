@@ -577,6 +577,9 @@ def process_json_file(input_file, output_dir, temp_dir, dataset_tasks, mode='pas
     versions_zero_env = 0
     versions_zero_evalfail = 0
 
+    # 计算实际要处理的任务数（排除 START_INDEX 之前的）
+    total_tasks_to_process = max(0, total_tasks - START_INDEX)
+
     #
     for idx, item in enumerate(data):
         if idx < START_INDEX:
@@ -605,7 +608,7 @@ def process_json_file(input_file, output_dir, temp_dir, dataset_tasks, mode='pas
                 fa.write(json.dumps(output_item) + "\n")
             tasks_written += 1
             if progress_callback:
-                progress_callback(tasks_written, total_tasks)
+                progress_callback(tasks_written, total_tasks_to_process)
             continue
 
         versions_total += len(code_versions)
@@ -737,10 +740,6 @@ def process_json_file(input_file, output_dir, temp_dir, dataset_tasks, mode='pas
                 if os.path.exists(data_path):
                     shutil.rmtree(data_path, ignore_errors=True)
 
-                #
-                if version_success:
-                    shutil.rmtree(work_dir, ignore_errors=True)
-
         if not silent:
             print('\n'.join(task_print_buffer))
 
@@ -748,8 +747,19 @@ def process_json_file(input_file, output_dir, temp_dir, dataset_tasks, mode='pas
         with open(output_path_jsonl, "a") as fa:
             fa.write(json.dumps(output_item) + "\n")
         tasks_written += 1
+        
+        # 删除该任务的所有临时文件（包括所有版本）
+        task_base_dir = os.path.join(temp_dir, input_filename)
+        if os.path.exists(task_base_dir):
+            for item_name in os.listdir(task_base_dir):
+                if item_name.startswith(f"task_{task_id}_"):
+                    item_path = os.path.join(task_base_dir, item_name)
+                    if os.path.isdir(item_path):
+                        shutil.rmtree(item_path, ignore_errors=True)
+        
+        # 每完成一个任务更新一次进度
         if progress_callback:
-            progress_callback(tasks_written, total_tasks)
+            progress_callback(tasks_written, total_tasks_to_process)
 
     if not silent:
         print(f"\n{'='*60}")
@@ -846,21 +856,31 @@ def batch_process(results_dir, output_dir, temp_dir, dataset_jsonl, mode='pass3'
     return success_count > 0
 
 def find_dataset_file():
-    """               """
-    possible_locations = [
-        DATASET,
-        f'datasets/{DATASET}',
-        f'./{DATASET}',
-        f'./datasets/{DATASET}',
-        f'../{DATASET}',
-        f'../datasets/{DATASET}',
-        f'../../{DATASET}',
-        f'../../datasets/{DATASET}',
+    """Auto-discover dataset file, prioritizing Datasets/ (capital D)"""
+    # Try to find common dataset names
+    dataset_names = [
+        'CUDABench-Set.jsonl',  # New standard name
+        DATASET,  # Legacy name from config
     ]
     
-    for loc in possible_locations:
-        if os.path.exists(loc):
-            return os.path.abspath(loc)
+    # Search paths (prioritize Datasets/ with capital D)
+    search_paths = [
+        'Datasets',      # New standard: project_root/Datasets/
+        'datasets',      # Legacy: project_root/datasets/
+        '.',             # Current directory
+        './Datasets',
+        './datasets',
+        '../Datasets',   # One level up
+        '../datasets',
+        '../../Datasets', # Two levels up
+        '../../datasets',
+    ]
+    
+    for search_dir in search_paths:
+        for dataset_name in dataset_names:
+            candidate = os.path.join(search_dir, dataset_name)
+            if os.path.exists(candidate):
+                return os.path.abspath(candidate)
     
     return None
 

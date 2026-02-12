@@ -25,6 +25,7 @@ def load_done_ids(result_path: str) -> set[int]:
 def extract_code(response: str) -> str | None:
     if response is None:
         return None
-    pattern = r"```(?:cpp|c\+\+)?\s*([\s\S]*?)```"
+    # pattern = r"```(?:cpp|c\+\+)?\s*([\s\S]*?)```"
+    pattern = r"```(?:\w+)?\s*([\s\S]*?)```"
     matches = re.findall(pattern, response)
     return matches[0].strip() if matches else None
