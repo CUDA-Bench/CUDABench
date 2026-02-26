@@ -34,7 +34,7 @@ def get_client(cfg: Config):
         )
     elif cfg.api_option == "qwen":
         _client = OpenAI(
-            api_key="sk-ef333ff576384bdea25282313e727b72",
+            api_key=os.getenv("ALIYUN_API_KEY"),
             base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
         )
     else:
