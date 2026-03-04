@@ -110,3 +110,15 @@ python Evaluate/manager.py full <path_to_results_file>
 ```bash
 python Evaluate/manager.py full Results/deepseek/deepseek-reasoner_level3_pass3.jsonl
 ```
+
+## 📚 Citation
+If you find this paper useful, please consider staring this repo and citing our paper!
+
+```
+@article{zhu2026cudabench,
+  title={CUDABench: Benchmarking LLMs for Text-to-CUDA Generation},
+  author={Zhu, Jiace and Chen, Wentao and Fan, Qi and Ren, Zhixing and Wu, Junying and Chai, Xing Zhe and Rungrueangwutthinon, Chotiwit and Ma, Yehan and Zou, An},
+  journal={arXiv preprint arXiv:2603.02236},
+  year={2026}
+}
+```
